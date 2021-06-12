@@ -14,6 +14,7 @@ library(corrplot)
 library(psych)
 library(moments)
 library(GPArotation)
+library(reshape2)
 ```
 
 ```{r}
@@ -81,6 +82,13 @@ min.err = 0.001,  max.iter = 50,symmetric=TRUE, warnings=TRUE, fm="minres",
  alpha=.1,p=.05,oblique.scores=FALSE,np.obs=NULL,use="pairwise",cor="cor",
  correct=.5,weight=NULL)
 print(efa_ar2)
-loadings(efa_ar2, sort = TRUE)
+efa_ar2_loadings <- loadings(efa_ar2, sort = TRUE)
+print(efa_ar2_loadings)
+```
+
+```{r}
+# Visualize the factor structure
+
+
 ```
 
