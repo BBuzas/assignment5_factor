@@ -1,0 +1,86 @@
+---
+title: "assignment5_factor"
+author: "Barnabás Buzás"
+date: '2021 06 12 '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tidyverse)
+library(Hmisc)
+library(corrplot)
+library(psych)
+library(moments)
+library(GPArotation)
+```
+
+```{r}
+# Read the data
+
+library(readr)
+assignment_5_dataset <- read_csv("C:/Users/user/Desktop/PSZICHOLÓGIA/Doktori_1/R/assignment_5_dataset.csv")
+attach(assignment_5_dataset)
+```
+
+```{r}
+# EDA
+
+str(assignment_5_dataset)
+```
+
+```{r}
+# Data manipulation
+
+sexFac <- factor(sex, levels=1:2, labels=c("male", "female"))
+partyFac <- factor(party, levels=1:4, labels=c("democrat", "republican", "other", "none"))
+```
+
+```{r}
+# Creating a correlation matrix
+
+ar <- data.frame(ar1, ar2, ar3, ar4, ar5, ar6, ar7, ar8, ar9, ar10, ar11, ar12, ar13, ar14, ar15, ar16, ar17, ar18, ar19, ar20, ar21, ar22, ar23, ar24, ar25, ar26, ar27, ar28, stringsAsFactors = TRUE)
+res <- rcorr(as.matrix(ar))
+Mres <- as.matrix(res$r)
+```
+
+```{r}
+# Visualizing the correlation matrix
+
+corrplot(Mres, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+```
+
+```{r}
+# Test for factorability
+
+Mar <- as.matrix(ar)
+KMO(Mar)
+```
+
+```{r}
+# Test for multivariate normality
+
+skewness(Mar)
+kurtosis(Mar)
+```
+
+```{r}
+# Create scree plot
+
+scree(Mres, factors = FALSE)
+```
+
+```{r}
+# Run the factor analysis
+
+efa_ar2 <- fa(Mar,nfactors=6,n.obs = NA,n.iter=1, rotate="oblimin", scores="regression", 
+residuals=FALSE, SMC=TRUE, covar=FALSE,missing=FALSE,impute="median",
+min.err = 0.001,  max.iter = 50,symmetric=TRUE, warnings=TRUE, fm="minres",
+ alpha=.1,p=.05,oblique.scores=FALSE,np.obs=NULL,use="pairwise",cor="cor",
+ correct=.5,weight=NULL)
+print(efa_ar2)
+loadings(efa_ar2, sort = TRUE)
+```
+
